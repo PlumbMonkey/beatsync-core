@@ -1,0 +1,13 @@
+{
+  "input_filename": "valid2.mid",
+  "detected_tempo": 120.0,
+  "detected_key": "C",
+  "key_confidence": 1.0,
+  "target_key": "G",
+  "semitone_shift": 7,
+  "actions": [
+    "retimed to 120.0 BPM",
+    "transposed to G"
+  ],
+  "status": "processed"
+}

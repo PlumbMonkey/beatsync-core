@@ -1,0 +1,29 @@
+Metadata-Version: 2.4
+Name: beatsync_midi
+Version: 0.1.0
+Summary: BeatSync MIDI: Batch MIDI processing and normalization.
+Author: BeatSync Team
+License:                                  Apache License
+                                   Version 2.0, January 2004
+                                http://www.apache.org/licenses/
+        
+        TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION
+        
+        ... (full Apache-2.0 license text should be inserted here) ...
+        
+Requires-Python: >=3.8
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Dynamic: license-file
+
+# BeatSync MIDI
+
+Batch MIDI processing and normalization tool for BeatSync.
+
+## CLI Usage
+```
+beatsync-midi --help
+```
+
+## License
+Apache-2.0

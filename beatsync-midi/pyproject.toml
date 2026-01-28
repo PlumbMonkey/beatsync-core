@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "beatsync_midi"
+version = "0.1.0"
+description = "BeatSync MIDI: Batch MIDI processing and normalization."
+authors = [
+    { name = "BeatSync Team" }
+]
+license = { file = "LICENSE" }
+readme = "README.md"
+requires-python = ">=3.8"
+
+[project.scripts]
+beatsync-midi = "beatsync_midi.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]

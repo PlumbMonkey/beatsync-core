@@ -1,0 +1,2 @@
+[console_scripts]
+beatsync-midi = beatsync_midi.cli:main
