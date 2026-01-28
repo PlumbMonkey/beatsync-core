@@ -1,0 +1,31 @@
+{
+  "metadata": {
+    "source_file": "dummy.mid",
+    "duration_sec": 1.0,
+    "analysis_version": "0.1.0"
+  },
+  "tempo": {
+    "bpm": 120.0,
+    "confidence": 0.9
+  },
+  "key": {
+    "name": "C major",
+    "confidence": 0.7
+  },
+  "rhythm": {
+    "beats": [0.0, 0.5, 1.0],
+    "bars": [0.0, 2.0, 4.0]
+  },
+  "structure": [
+    {
+      "label": "intro",
+      "start": 0.0,
+      "end": 16.0,
+      "confidence": 0.8
+    }
+  ],
+  "energy": {
+    "curve": [0.1, 0.2, 0.3],
+    "peaks": [32.0, 64.0]
+  }
+}
