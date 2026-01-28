@@ -1,0 +1,2 @@
+[console_scripts]
+beatsync = beatsync_core.cli:main
