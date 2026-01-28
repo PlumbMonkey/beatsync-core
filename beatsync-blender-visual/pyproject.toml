@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "beatsync_blender_visual_core"
+version = "0.1.0"
+description = "Core logic for BeatSync Blender Visual (pure Python, no bpy)"
+authors = [
+    { name="PlumbMonkey" }
+]
+readme = "README.md"
+requires-python = ">=3.8"
+
+[tool.setuptools.packages.find]
+where = ["src"]

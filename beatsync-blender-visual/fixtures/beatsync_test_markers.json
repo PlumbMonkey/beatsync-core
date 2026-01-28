@@ -1,0 +1,7 @@
+{
+  "markers": [
+    {"name": "Beat 1", "frame": 10},
+    {"name": "Beat 2", "frame": 20},
+    {"name": "Beat 3", "frame": 30}
+  ]
+}
