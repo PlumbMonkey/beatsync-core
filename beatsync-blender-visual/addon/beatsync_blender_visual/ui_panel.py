@@ -1,3 +1,21 @@
+# Minimal UI panel for BeatSync Blender Visual (Phase 3.5)
+import bpy
+
+class BEATSYNC_PT_main(bpy.types.Panel):
+    bl_label = "BeatSync"
+    bl_idname = "BEATSYNC_PT_main"
+    bl_space_type = 'VIEW_3D'
+    bl_region_type = 'UI'
+    bl_category = 'BeatSync'
+
+    def draw(self, context):
+        layout = self.layout
+        layout.label(text="BeatSync Add-on Loaded!")
+        layout.operator("wm.beatsync_import_json", text="Import BeatSync JSON")
+        # Status readout (placeholder)
+        scene = context.scene
+        status = getattr(scene, 'beatsync_status', 'No data loaded')
+        layout.label(text=f"Status: {status}")
 import bpy
 
 from .ops_import import BEATSYNC_OT_import_json
