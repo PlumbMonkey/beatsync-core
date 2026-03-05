@@ -1,0 +1,22 @@
+# Vite
+dist/
+node_modules/
+
+# Environment variables
+.env.local
+.env.*.local
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+npm-debug.log
+yarn-error.log

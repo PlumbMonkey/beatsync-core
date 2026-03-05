@@ -1,12 +1,10 @@
-
-"""Audio key detection using chromagram and Krumhansl-Schmuckler profiles."""
+"""MIDI key detection using pitch class histogram and Krumhansl-Schmuckler profiles."""
 import numpy as np
 from scipy.stats import pearsonr
-import librosa
 
 
 # Krumhansl-Schmuckler profiles for major and minor keys
-# Profiles for all 12 chromatic pitches: C, C#, D, D#, E, F, F#, G, G#, A, A#, B
+# Profiles for all 12 pitch classes: C, C#, D, D#, E, F, F#, G, G#, A, A#, B
 MAJOR_PROFILES = {
     "C": [0.15249, 0.02520, 0.11691, 0.13063, 0.05000, 0.02488, 0.10690, 0.15613, 0.08616, 0.03112, 0.08616, 0.04572],
     "C#": [0.04572, 0.15249, 0.02520, 0.11691, 0.13063, 0.05000, 0.02488, 0.10690, 0.15613, 0.08616, 0.03112, 0.08616],
@@ -40,35 +38,42 @@ MINOR_PROFILES = {
 PITCH_NAMES = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"]
 
 
-def analyze(y: np.ndarray, sr: int) -> dict:
+def detect_key(midi) -> dict:
     """
-    Detect the key of an audio signal using chromagram and Krumhansl-Schmuckler profiles.
+    Detect the key of a MIDI file using pitch class histogram.
 
     Args:
-        y: Audio time series as numpy array.
-        sr: Sampling rate of the audio.
+        midi: A mido.MidiFile object.
 
     Returns:
         Dictionary with keys:
             - "key": Key name as string (e.g., "C major", "A minor", "unknown")
-            - "confidence": Float between 0.0 and 1.0 indicating confidence in the detection
+            - "confidence": Float between 0.0 and 0.85 indicating confidence
+                           in the detection (capped at 0.85 for MIDI)
     """
     try:
-        # Handle edge cases
-        if len(y) == 0:
+        # Handle None/empty MIDI
+        if midi is None or not hasattr(midi, 'tracks'):
             return {"key": "unknown", "confidence": 0.0}
 
-        # Compute chromagram using CQT-based chroma features
-        chroma = librosa.feature.chroma_cqt(y=y, sr=sr)
+        # Extract pitch class histogram from all notes
+        pitch_counts = np.zeros(12)
+        note_count = 0
 
-        # Aggregate chromagram over time (mean across frames)
-        chroma_mean = np.mean(chroma, axis=1)
+        for track in midi.tracks:
+            for msg in track:
+                # Count note_on events
+                if msg.type == 'note_on' and msg.velocity > 0:
+                    pitch_class = msg.note % 12
+                    pitch_counts[pitch_class] += msg.velocity  # Weight by velocity
+                    note_count += 1
 
-        # Normalize chroma vector
-        if np.sum(chroma_mean) > 0:
-            chroma_mean = chroma_mean / np.sum(chroma_mean)
-        else:
+        # Handle empty MIDI
+        if note_count == 0:
             return {"key": "unknown", "confidence": 0.0}
+
+        # Normalize pitch class distribution
+        pitch_histogram = pitch_counts / np.sum(pitch_counts)
 
         # Compare against all 24 profiles
         best_key = "unknown"
@@ -80,24 +85,21 @@ def analyze(y: np.ndarray, sr: int) -> dict:
             profile = np.array(MAJOR_PROFILES[pitch])
             # Normalize profile
             profile = profile / np.sum(profile)
-            # Compute Pearson correlation
             try:
-                correlation, _ = pearsonr(chroma_mean, profile)
+                correlation, _ = pearsonr(pitch_histogram, profile)
                 if correlation > best_correlation:
                     best_correlation = correlation
                     best_key = pitch
                     best_mode = "major"
             except Exception:
-                # Skip comparison if correlation fails
                 pass
 
         # Try minor keys
         for pitch in PITCH_NAMES:
             profile = np.array(MINOR_PROFILES[pitch])
-            # Normalize profile
             profile = profile / np.sum(profile)
             try:
-                correlation, _ = pearsonr(chroma_mean, profile)
+                correlation, _ = pearsonr(pitch_histogram, profile)
                 if correlation > best_correlation:
                     best_correlation = correlation
                     best_key = pitch
@@ -106,8 +108,10 @@ def analyze(y: np.ndarray, sr: int) -> dict:
                 pass
 
         # Normalize correlation to confidence (correlation ranges from -1 to 1)
-        # Map to 0.0-1.0 range
+        # Map to 0.0-0.85 range (MIDI detection is less reliable than audio)
         confidence = max(0.0, (best_correlation + 1.0) / 2.0)
+        # Cap MIDI confidence at 0.85 since it's less reliable than audio
+        confidence = min(0.85, confidence)
 
         if best_key != "unknown":
             return {"key": f"{best_key} {best_mode}", "confidence": confidence}
@@ -117,8 +121,3 @@ def analyze(y: np.ndarray, sr: int) -> dict:
     except Exception:
         # Fallback for any unexpected errors
         return {"key": "unknown", "confidence": 0.0}
-
-
-def analyze_midi(mid):
-    """Placeholder for MIDI key detection (not implemented in audio module)."""
-    return {"key": "unknown", "confidence": 0.0}

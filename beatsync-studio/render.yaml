@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: beatsync-studio
+    runtime: python
+    pythonVersion: 3.10
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "uvicorn beatsync_studio.main:app --host 0.0.0.0 --port 8000"
+    envVars:
+      - key: PYTHONUNBUFFERED
+        value: "1"
+    health:
+      path: /api/health
+      checkIntervalSeconds: 10
