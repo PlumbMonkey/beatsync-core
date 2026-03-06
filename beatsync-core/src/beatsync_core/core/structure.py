@@ -73,18 +73,33 @@ def analyze(y: np.ndarray, sr: int) -> list:
             return [{
                 "label": "section_1",
                 "start": 0.0,
-                "end": duration
+                "end": duration,
+                "confidence": 0.5
             }]
 
-        # Create section list
+        # Create section list with confidence based on onset strength in each section
         sections = []
         for i in range(len(filtered_boundaries) - 1):
             start = float(filtered_boundaries[i])
             end = float(filtered_boundaries[i + 1])
+            
+            # Compute confidence: mean onset strength in this section
+            # Higher onset activity = higher confidence in section boundary
+            start_frame = int(librosa.time_to_frames(start, sr=sr))
+            end_frame = int(librosa.time_to_frames(end, sr=sr))
+            section_onset = onset_env[start_frame:end_frame]
+            
+            if len(section_onset) > 0 and onset_env.max() > 0:
+                confidence = float(np.mean(section_onset) / onset_env.max())
+                confidence = np.clip(confidence, 0.0, 1.0)
+            else:
+                confidence = 0.5
+            
             sections.append({
                 "label": f"section_{i + 1}",
                 "start": start,
-                "end": end
+                "end": end,
+                "confidence": confidence
             })
 
         return sections
