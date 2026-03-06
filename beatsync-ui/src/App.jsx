@@ -79,7 +79,7 @@ function App() {
 
           {appState === 'selected' && (
             <div className="space-y-8">
-              <UploadZone onFileSelected={handleFileSelected} isLoading={false} />
+              <UploadZone onFileSelected={handleFileSelected} isLoading={false} initialFile={selectedFile} />
 
               <div className="flex justify-center gap-4">
                 <button

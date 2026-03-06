@@ -7,9 +7,9 @@ const ACCEPTED_EXTENSIONS = ['.wav', '.mp3', '.flac', '.ogg']
  * UploadZone Component
  * Drag-and-drop zone for audio file selection with click-to-browse fallback
  */
-export default function UploadZone({ onFileSelected, isLoading }) {
+export default function UploadZone({ onFileSelected, isLoading, initialFile = null }) {
   const [isDragging, setIsDragging] = useState(false)
-  const [selectedFile, setSelectedFile] = useState(null)
+  const [selectedFile, setSelectedFile] = useState(initialFile)
   const fileInputRef = useRef(null)
 
   const handleDragOver = (e) => {
