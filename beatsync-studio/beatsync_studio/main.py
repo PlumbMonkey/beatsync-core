@@ -3,7 +3,6 @@ Minimal FastAPI backend for BeatSync Studio Slice 4.1
 Satisfies test_api_analysis.py contract tests
 """
 import os
-import shutil
 import tempfile
 import uuid
 import hashlib
@@ -110,7 +109,8 @@ async def analyze(file: UploadFile = File(...)):
         out_json = os.path.join(out_dir, "beatsync.json")
         # Only persist if not already present (determinism)
         if not os.path.exists(out_json):
-            shutil.copyfile(tmp_json, out_json)
+            with open(out_json, "w", encoding="utf-8") as f:
+                json.dump(result, f, indent=2)
         # Step 7: Response shape
         contract = extract_contract_fields(result)
         resp = {
