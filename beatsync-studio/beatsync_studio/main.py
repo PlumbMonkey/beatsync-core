@@ -7,6 +7,7 @@ import tempfile
 import uuid
 import hashlib
 import json
+import sys
 from fastapi import FastAPI, UploadFile, File, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
@@ -115,9 +116,11 @@ async def analyze(file: UploadFile = File(...)):
         except Exception as e:
             raise HTTPException(status_code=500, detail=f"BeatSync Core failed: {str(e)}")
         # Step 4: Schema validation
+        print("ANALYSIS RESULT:", json.dumps(result, indent=2, default=str), file=sys.stderr, flush=True)
         try:
             validate(instance=result, schema=CANONICAL_SCHEMA)
-        except ValidationError:
+        except ValidationError as e:
+            print(f"SCHEMA VALIDATION ERROR: {e.message}", file=sys.stderr, flush=True)
             raise HTTPException(status_code=422, detail="Schema validation failed")
         # Step 5: Deterministic hash
         analysis_hash = compute_analysis_hash(file_bytes, result["metadata"]["analysis_version"], SCHEMA_VERSION)
