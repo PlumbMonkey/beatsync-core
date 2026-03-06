@@ -7,19 +7,20 @@ import shutil
 import tempfile
 import uuid
 import hashlib
-import subprocess
 import json
 from fastapi import FastAPI, UploadFile, File, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from fastapi.routing import APIRouter
 from jsonschema import validate, ValidationError
+from beatsync_core.core import audio as beatsync_audio
+from beatsync_core.core import midi as beatsync_midi
 
 # --- Config ---
-ACCEPTED_EXTS = {".wav", ".mp3", ".mid"}
+ACCEPTED_EXTS = {".wav", ".mp3", ".flac", ".ogg", ".mid"}
 SCHEMA_VERSION = "0.1"
 ANALYSIS_VERSION = "0.1.0"
 STORAGE_ROOT = "storage"  # relative to project root
-BEATSYNC_CLI = "beatsync"  # must be in PATH or use absolute path
 SCHEMA_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../beatsync-core/schema/v0_1.json'))
 
 # Load canonical schema once
@@ -28,6 +29,17 @@ with open(SCHEMA_PATH, 'r', encoding='utf-8') as f:
 
 # --- App & Router ---
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "https://beatsync-ui.vercel.app",
+        "http://localhost:5173",  # Vite dev server
+    ],
+    allow_methods=["GET", "POST"],
+    allow_headers=["*"],
+)
+
 router = APIRouter()
 
 # --- Helpers ---
@@ -72,25 +84,19 @@ async def analyze(file: UploadFile = File(...)):
     # Step 2: Temp file handling
     with tempfile.TemporaryDirectory() as tmpdir:
         input_path = os.path.abspath(os.path.join(tmpdir, f"input{ext}"))
-        tmp_json = os.path.abspath(os.path.join(tmpdir, "beatsync.tmp.json"))
         with open(input_path, "wb") as f:
             f.write(file_bytes)
-        # Step 3: BeatSync Core invocation
+        # Step 3: BeatSync Core invocation (direct Python call)
         try:
-            proc = subprocess.run([
-                BEATSYNC_CLI, "analyze", input_path, "--out", tmp_json
-            ], timeout=30, cwd=tmpdir)
-        except subprocess.TimeoutExpired:
-            # Clean up and fail
-            raise HTTPException(status_code=500, detail="BeatSync analysis timed out")
-        if proc.returncode != 0 or not os.path.exists(tmp_json):
-            raise HTTPException(status_code=500, detail="BeatSync Core failed")
+            if ext in [".wav", ".mp3", ".flac", ".ogg"]:
+                result = beatsync_audio.analyze(input_path)
+            elif ext in [".mid", ".midi"]:
+                result = beatsync_midi.analyze(input_path)
+            else:
+                raise ValueError(f"Unsupported file type: {ext}")
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=f"BeatSync Core failed: {str(e)}")
         # Step 4: Schema validation
-        try:
-            with open(tmp_json, "r", encoding="utf-8") as f:
-                result = json.load(f)
-        except Exception:
-            raise HTTPException(status_code=422, detail="Invalid JSON output")
         try:
             validate(instance=result, schema=CANONICAL_SCHEMA)
         except ValidationError:
