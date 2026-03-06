@@ -20,7 +20,26 @@ ACCEPTED_EXTS = {".wav", ".mp3", ".flac", ".ogg", ".mid"}
 SCHEMA_VERSION = "0.1"
 ANALYSIS_VERSION = "0.1.0"
 STORAGE_ROOT = "storage"  # relative to project root
-SCHEMA_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../beatsync-core/schema/v0_1.json'))
+
+# Resolve schema path - works in both local dev and Render deployment
+SCHEMA_PATH = None
+# Try 1: Local monorepo structure (local dev)
+local_schema = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../beatsync-core/schema/v0_1.json'))
+if os.path.exists(local_schema):
+    SCHEMA_PATH = local_schema
+# Try 2: Installed package structure (Render)
+else:
+    try:
+        import beatsync_core
+        package_dir = os.path.dirname(beatsync_core.__file__)
+        pkg_schema = os.path.join(package_dir, '..', 'schema', 'v0_1.json')
+        if os.path.exists(pkg_schema):
+            SCHEMA_PATH = os.path.abspath(pkg_schema)
+    except (ImportError, AttributeError):
+        pass
+
+if not SCHEMA_PATH:
+    raise RuntimeError("Schema file not found at expected locations. Check beatsync-core installation.")
 
 # Load canonical schema once
 with open(SCHEMA_PATH, 'r', encoding='utf-8') as f:
