@@ -1,15 +1,16 @@
 
-"""Music structure segmentation using novelty-based boundary detection."""
+"""Music structure segmentation using fast onset peak detection."""
 import numpy as np
 import librosa
+from scipy.signal import find_peaks
 
 
 def analyze(y: np.ndarray, sr: int) -> list:
     """
-    Detect section boundaries in audio using spectral novelty and segmentation.
+    Detect section boundaries in audio using fast onset peak detection.
 
-    Uses onset strength to identify regions of significant spectral change,
-    then applies agglomerative clustering to identify section boundaries.
+    Uses onset strength peaks to identify regions of significant spectral change.
+    Avoids expensive recurrence matrix and agglomerative clustering for fast performance on free tier.
 
     Args:
         y: Audio time series as numpy array.
@@ -29,26 +30,32 @@ def analyze(y: np.ndarray, sr: int) -> list:
         if len(y) == 0:
             return []
 
-        # Compute onset strength (spectral novelty)
+        # Compute onset strength (spectral novelty) - fast
         onset_env = librosa.onset.onset_strength(y=y, sr=sr)
-        times = librosa.frames_to_time(np.arange(len(onset_env)), sr=sr)
-
-        # Compute recurrence matrix to find self-similar structure
-        recurrence = librosa.segment.recurrence_matrix(
-            onset_env,
-            mode='affinity',
-            sym=True
-        )
-
-        # Apply agglomerative clustering to find boundaries
-        boundaries = librosa.segment.agglomerative(recurrence, k=max(2, len(onset_env) // 10))
+        
+        # Fast: detect peaks in onset strength directly
+        # Avoid O(N²) recurrence matrix computation
+        if len(onset_env) > 0:
+            # Normalize onset strength
+            if onset_env.max() > 0:
+                onset_normalized = onset_env / onset_env.max()
+            else:
+                onset_normalized = onset_env
+            
+            # Find peaks with reasonable spacing (minimum 4 seconds between boundaries)
+            min_distance = int(4.0 * sr / 512)  # 512 is librosa's default hop_length
+            peaks, _ = find_peaks(onset_normalized, height=0.4, distance=min_distance)
+        else:
+            peaks = np.array([])
 
         # Convert frame indices to time
-        boundary_times = librosa.frames_to_time(boundaries, sr=sr)
-        boundary_times = np.sort(boundary_times)
+        boundary_frames = np.concatenate([[0], peaks, [len(onset_env) - 1]])
+        boundary_times = librosa.frames_to_time(boundary_frames, sr=sr)
+        boundary_times = np.unique(boundary_times)
 
-        # Ensure boundaries span the full track
         duration = librosa.get_duration(y=y, sr=sr)
+        
+        # Ensure boundaries span the full track
         boundary_times = np.unique(np.concatenate([[0.0], boundary_times, [duration]]))
 
         # Filter out boundaries that are too close (minimum section length: 4 seconds)
