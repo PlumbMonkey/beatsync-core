@@ -18,4 +18,4 @@ def analyze(y, sr):
 	return {"bpm": bpm, "confidence": 0.9}
 
 def analyze_midi(bpm):
-	return {"bpm": float(np.round(bpm, 2)), "confidence": 1.0}
+	return {"bpm": float(np.round(bpm, 2)), "confidence": float(1.0)}

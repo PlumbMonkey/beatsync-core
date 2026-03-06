@@ -45,8 +45,8 @@ def analyze(input_file):
     gc.collect()
     
     # Rhythm: simple beat/bar grid based on detected BPM
-    beats = np.arange(0, duration_sec, 60.0 / tempo_out["bpm"]).tolist()
-    bars = np.arange(0, duration_sec, 4 * 60.0 / tempo_out["bpm"]).tolist()
+    beats = [float(x) for x in np.arange(0, duration_sec, 60.0 / tempo_out["bpm"]).tolist()]
+    bars = [float(x) for x in np.arange(0, duration_sec, 4 * 60.0 / tempo_out["bpm"]).tolist()]
     
     return {
         "metadata": {

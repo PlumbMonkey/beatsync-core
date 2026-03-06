@@ -72,9 +72,9 @@ def analyze(y: np.ndarray, sr: int) -> list:
         if len(filtered_boundaries) < 2:
             return [{
                 "label": "section_1",
-                "start": 0.0,
-                "end": duration,
-                "confidence": 0.5
+                "start": float(0.0),
+                "end": float(duration),
+                "confidence": float(0.5)
             }]
 
         # Create section list with confidence based on onset strength in each section
@@ -91,14 +91,14 @@ def analyze(y: np.ndarray, sr: int) -> list:
             
             if len(section_onset) > 0 and onset_env.max() > 0:
                 confidence = float(np.mean(section_onset) / onset_env.max())
-                confidence = np.clip(confidence, 0.0, 1.0)
+                confidence = float(np.clip(confidence, 0.0, 1.0))
             else:
-                confidence = 0.5
+                confidence = float(0.5)
             
             sections.append({
                 "label": f"section_{i + 1}",
-                "start": start,
-                "end": end,
+                "start": float(start),
+                "end": float(end),
                 "confidence": confidence
             })
 

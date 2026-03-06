@@ -56,7 +56,7 @@ def analyze(y: np.ndarray, sr: int) -> dict:
     try:
         # Handle edge cases
         if len(y) == 0:
-            return {"key": "unknown", "confidence": 0.0}
+            return {"name": "unknown", "confidence": float(0.0)}
 
         # Compute chromagram using CQT-based chroma features
         chroma = librosa.feature.chroma_cqt(y=y, sr=sr)
@@ -68,7 +68,7 @@ def analyze(y: np.ndarray, sr: int) -> dict:
         if np.sum(chroma_mean) > 0:
             chroma_mean = chroma_mean / np.sum(chroma_mean)
         else:
-            return {"key": "unknown", "confidence": 0.0}
+            return {"name": "unknown", "confidence": float(0.0)}
 
         # Compare against all 24 profiles
         best_key = "unknown"
@@ -107,18 +107,18 @@ def analyze(y: np.ndarray, sr: int) -> dict:
 
         # Normalize correlation to confidence (correlation ranges from -1 to 1)
         # Map to 0.0-1.0 range
-        confidence = max(0.0, (best_correlation + 1.0) / 2.0)
+        confidence = float(max(0.0, (best_correlation + 1.0) / 2.0))
 
         if best_key != "unknown":
-            return {"key": f"{best_key} {best_mode}", "confidence": confidence}
+            return {"name": f"{best_key} {best_mode}", "confidence": confidence}
         else:
-            return {"key": "unknown", "confidence": 0.0}
+            return {"name": "unknown", "confidence": float(0.0)}
 
     except Exception:
         # Fallback for any unexpected errors
-        return {"key": "unknown", "confidence": 0.0}
+        return {"name": "unknown", "confidence": float(0.0)}
 
 
 def analyze_midi(mid):
     """Placeholder for MIDI key detection (not implemented in audio module)."""
-    return {"key": "unknown", "confidence": 0.0}
+    return {"name": "unknown", "confidence": float(0.0)}

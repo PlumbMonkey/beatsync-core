@@ -9,9 +9,9 @@ def analyze(y, sr):
 	frames = [y[i:i+frame_size] for i in range(0, len(y)-frame_size+1, hop)]
 	rms = np.array([np.sqrt(np.mean(f**2)) for f in frames])
 	if rms.max() > 0:
-		curve = (rms / rms.max()).tolist()
+		curve = [float(x) for x in (rms / rms.max()).tolist()]
 	else:
-		curve = rms.tolist()
+		curve = [float(x) for x in rms.tolist()]
 	peaks, _ = find_peaks(rms, height=0.8*rms.max())
-	peak_times = (np.array(peaks) * hop / sr).tolist()
+	peak_times = [float(x) for x in (np.array(peaks) * hop / sr).tolist()]
 	return {"curve": curve, "peaks": peak_times}
