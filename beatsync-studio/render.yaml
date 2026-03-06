@@ -2,9 +2,10 @@ services:
   - type: web
     name: beatsync-studio
     runtime: python
+    rootDir: beatsync-studio
     pythonVersion: 3.10
     buildCommand: "pip install ../beatsync-core && pip install -r requirements.txt"
-    startCommand: "uvicorn beatsync_studio.main:app --host 0.0.0.0 --port 8000"
+    startCommand: "uvicorn beatsync_studio.main:app --host 0.0.0.0 --port $PORT"
     envVars:
       - key: PYTHONUNBUFFERED
         value: "1"

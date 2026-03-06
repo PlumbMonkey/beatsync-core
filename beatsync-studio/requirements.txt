@@ -1,9 +1,5 @@
 # BeatSync Studio Backend Dependencies
-# Generated from pyproject.toml
 # Python 3.10+ required
-
-# Local packages (install first)
-../beatsync-core
 
 # Core dependencies
 fastapi>=0.109.0
