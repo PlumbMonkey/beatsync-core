@@ -46,6 +46,10 @@ if not SCHEMA_PATH:
 with open(SCHEMA_PATH, 'r', encoding='utf-8') as f:
     CANONICAL_SCHEMA = json.load(f)
 
+# Confirm schema loaded at startup
+print(f"SCHEMA LOADED FROM: {SCHEMA_PATH}", file=sys.stderr, flush=True)
+print(f"SCHEMA KEYS: {list(CANONICAL_SCHEMA.keys())}", file=sys.stderr, flush=True)
+
 # --- App & Router ---
 app = FastAPI()
 
@@ -120,7 +124,10 @@ async def analyze(file: UploadFile = File(...)):
         try:
             validate(instance=result, schema=CANONICAL_SCHEMA)
         except ValidationError as e:
-            print(f"SCHEMA VALIDATION ERROR: {e.message}", file=sys.stderr, flush=True)
+            print(f"SCHEMA PATH: {list(e.path)}", file=sys.stderr, flush=True)
+            print(f"SCHEMA MESSAGE: {e.message}", file=sys.stderr, flush=True)
+            print(f"SCHEMA VALIDATOR: {e.validator}", file=sys.stderr, flush=True)
+            print(f"FAILED VALUE: {e.instance}", file=sys.stderr, flush=True)
             raise HTTPException(status_code=422, detail="Schema validation failed")
         # Step 5: Deterministic hash
         analysis_hash = compute_analysis_hash(file_bytes, result["metadata"]["analysis_version"], SCHEMA_VERSION)
