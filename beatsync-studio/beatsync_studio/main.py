@@ -20,6 +20,7 @@ from beatsync_core.core import midi as beatsync_midi
 ACCEPTED_EXTS = {".wav", ".mp3", ".flac", ".ogg", ".mid"}
 SCHEMA_VERSION = "0.1"
 ANALYSIS_VERSION = "0.1.0"
+DEPLOY_VERSION = "2026-03-11-v2"  # Bump on each deploy to verify code freshness
 STORAGE_ROOT = "storage"  # relative to project root
 
 # Resolve schema path - works in both local dev and Render deployment
@@ -63,21 +64,21 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-router = APIRouter()
-
-# --- Root Endpoint ---
-@router.get("/")
+# --- Root & Health — registered directly on app (not via router) ---
+@app.get("/")
 async def root():
     return {
         "service": "beatsync-studio",
         "version": ANALYSIS_VERSION,
+        "deploy": DEPLOY_VERSION,
         "docs": "/docs"
     }
 
-# --- Health Check Endpoint (for Render) ---
-@router.get("/api/health")
+@app.get("/api/health")
 async def health_check():
     return {"status": "ok", "service": "beatsync-studio"}
+
+router = APIRouter()
 
 # --- Helpers ---
 def get_ext(filename):
