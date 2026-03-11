@@ -65,6 +65,11 @@ app.add_middleware(
 
 router = APIRouter()
 
+# --- Health Check Endpoint (for Render) ---
+@router.get("/api/health")
+async def health_check():
+    return {"status": "ok", "service": "beatsync-studio"}
+
 # --- Helpers ---
 def get_ext(filename):
     return os.path.splitext(filename)[1].lower()
