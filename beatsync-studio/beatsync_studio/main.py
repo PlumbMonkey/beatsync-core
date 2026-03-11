@@ -20,7 +20,7 @@ from beatsync_core.core import midi as beatsync_midi
 ACCEPTED_EXTS = {".wav", ".mp3", ".flac", ".ogg", ".mid"}
 SCHEMA_VERSION = "0.1"
 ANALYSIS_VERSION = "0.1.0"
-DEPLOY_VERSION = "2026-03-11-v3"  # Bump on each deploy to verify code freshness
+DEPLOY_VERSION = "2026-03-11-v4"  # Bump on each deploy to verify code freshness
 STORAGE_ROOT = "storage"  # relative to project root
 
 # Resolve schema path - works in both local dev and Render deployment
