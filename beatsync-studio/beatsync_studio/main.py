@@ -65,6 +65,15 @@ app.add_middleware(
 
 router = APIRouter()
 
+# --- Root Endpoint ---
+@router.get("/")
+async def root():
+    return {
+        "service": "beatsync-studio",
+        "version": ANALYSIS_VERSION,
+        "docs": "/docs"
+    }
+
 # --- Health Check Endpoint (for Render) ---
 @router.get("/api/health")
 async def health_check():
