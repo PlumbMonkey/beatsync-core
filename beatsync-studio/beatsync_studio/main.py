@@ -20,7 +20,7 @@ from beatsync_core.core import midi as beatsync_midi
 ACCEPTED_EXTS = {".wav", ".mp3", ".flac", ".ogg", ".mid"}
 SCHEMA_VERSION = "0.1"
 ANALYSIS_VERSION = "0.1.0"
-DEPLOY_VERSION = "2026-03-11-v2"  # Bump on each deploy to verify code freshness
+DEPLOY_VERSION = "2026-03-11-v3"  # Bump on each deploy to verify code freshness
 STORAGE_ROOT = "storage"  # relative to project root
 
 # Resolve schema path - works in both local dev and Render deployment
@@ -60,7 +60,8 @@ app.add_middleware(
         "https://beatsync-ui.vercel.app",
         "http://localhost:5173",  # Vite dev server
     ],
-    allow_methods=["GET", "POST"],
+    allow_credentials=True,
+    allow_methods=["*"],
     allow_headers=["*"],
 )
 
