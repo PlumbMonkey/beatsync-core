@@ -3,7 +3,7 @@
  * Handles file upload and analysis requests to the FastAPI backend
  */
 
-const API_BASE = import.meta.env.VITE_API_URL || 'https://beatsync-studio.onrender.com'
+const API_BASE = import.meta.env.VITE_API_URL || ''
 
 export class ApiError extends Error {
   constructor(message, status, details) {
