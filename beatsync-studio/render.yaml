@@ -4,11 +4,13 @@ services:
     runtime: python
     rootDir: beatsync-studio
     pythonVersion: 3.10
-    buildCommand: "pip install -r requirements.txt && pip install ../beatsync-core && pip install ../beatsync-midi"
+    buildCommand: "pip install -r requirements.txt && echo 'Build successful'"
     startCommand: "uvicorn beatsync_studio.main:app --host 0.0.0.0 --port $PORT"
     envVars:
       - key: PYTHONUNBUFFERED
         value: "1"
+      - key: PYTHONPATH
+        value: "/opt/render/project/src/beatsync-core/src:/opt/render/project/src/beatsync-midi/src"
     health:
       path: /api/health
       checkIntervalSeconds: 10
