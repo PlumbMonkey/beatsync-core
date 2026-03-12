@@ -29,7 +29,5 @@ dev = [
 ]
 
 [tool.setuptools.packages.find]
-where = [""]
-
-[[tool.setuptools.py-modules]]
-name = "beatsync_studio"
+where = ["."]
+include = ["beatsync_studio*"]

@@ -11,9 +11,14 @@ jsonschema>=4.21.0
 librosa>=0.10.1
 numpy>=1.26.0
 scipy>=1.11.0
+soundfile>=0.12.1
 
 # MIDI processing (from beatsync-midi)
 mido>=1.3.0
+
+# Local monorepo packages (installed via path in build step)
+# beatsync-core and beatsync-midi are installed from sibling directories
+# See render.yaml buildCommand for deployment install
 
 # Development dependencies (optional)
 pytest>=7.0.0
