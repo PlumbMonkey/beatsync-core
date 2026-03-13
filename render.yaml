@@ -1,0 +1,23 @@
+# render.yaml — BeatSync Studio deployment blueprint
+# Place this file at the REPO ROOT so Render picks it up as a Blueprint.
+# The previous render.yaml inside beatsync-studio/ had rootDir: beatsync-studio
+# which prevented beatsync-core and beatsync-midi from being installed.
+# With no rootDir set, all commands run from the repo root where setup.sh lives.
+
+services:
+  - type: web
+    name: beatsync-studio
+    runtime: python
+    # NO rootDir — build and start both run from the repo root.
+    # setup.sh installs all three local packages via pip install -e before
+    # the server starts, so every import in main.py resolves correctly.
+    pythonVersion: "3.10"
+    buildCommand: "bash setup.sh"
+    startCommand: "uvicorn beatsync_studio.main:app --host 0.0.0.0 --port $PORT"
+    envVars:
+      - key: PYTHONUNBUFFERED
+        value: "1"
+    health:
+      path: /api/health
+      checkIntervalSeconds: 10
+      timeoutSeconds: 30

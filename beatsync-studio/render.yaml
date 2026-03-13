@@ -1,3 +1,16 @@
+# SUPERSEDED — do not use for deployment.
+# The authoritative render.yaml is now at the REPO ROOT (../render.yaml).
+# This file is kept only for reference.
+#
+# The problem with this config: rootDir: beatsync-studio meant Render ran
+# pip install -r requirements.txt from a subdirectory that never installed
+# beatsync-core or beatsync-midi as local packages, causing FastAPI to crash
+# on import before the server could start.
+#
+# The fix: render.yaml moved to repo root, rootDir removed, buildCommand
+# replaced with `bash setup.sh` which installs all three local packages
+# via pip install -e before the server starts.
+
 services:
   - type: web
     name: beatsync-studio
