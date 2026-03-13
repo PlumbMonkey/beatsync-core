@@ -164,6 +164,7 @@ async def analyze(file: UploadFile = File(...)):
             "analysis_id": analysis_id,
             "analysis_hash": analysis_hash,
             **contract,
+            **result,   # Full analysis: metadata, tempo, key, rhythm, structure, energy
             "download_url": f"/api/analysis/{analysis_id}/download"
         }
         # Remove forbidden fields if present

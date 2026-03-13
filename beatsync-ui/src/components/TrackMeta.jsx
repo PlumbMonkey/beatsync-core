@@ -49,16 +49,16 @@ export default function TrackMeta({ contract }) {
         <div>
           <div className="text-sm text-slate-400 mb-2">Tempo</div>
           <p className="text-3xl font-bold text-white mb-3">
-            {contract.bpm.toFixed(1)} BPM
+            {contract.tempo.bpm.toFixed(1)} BPM
           </p>
-          <ConfidenceBar value={contract.bpm_confidence} />
+          <ConfidenceBar value={contract.tempo.confidence} />
         </div>
 
         {/* Key */}
         <div>
           <div className="text-sm text-slate-400 mb-2">Key</div>
-          <p className="text-3xl font-bold text-white mb-3">{contract.key}</p>
-          <ConfidenceBar value={contract.key_confidence} />
+          <p className="text-3xl font-bold text-white mb-3">{contract.key.name}</p>
+          <ConfidenceBar value={contract.key.confidence} />
         </div>
       </div>
 
@@ -70,14 +70,14 @@ export default function TrackMeta({ contract }) {
         <div>
           <div className="text-sm text-slate-400 mb-1">Duration</div>
           <p className="text-lg font-semibold text-white">
-            {formatDuration(contract.duration_seconds)}
+            {formatDuration(contract.duration_sec)}
           </p>
         </div>
 
         <div>
           <div className="text-sm text-slate-400 mb-1">Beats</div>
           <p className="text-lg font-semibold text-white">
-            {contract.beats.length} beats
+            {contract.rhythm.beats.length} beats
           </p>
         </div>
       </div>

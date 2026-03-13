@@ -29,7 +29,7 @@ export default function SectionMap({ contract }) {
     return null
   }
 
-  const duration = contract.duration_seconds
+  const duration = contract.duration_sec
 
   return (
     <div className="w-full max-w-4xl mx-auto mt-6">

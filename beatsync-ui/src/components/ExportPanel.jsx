@@ -18,8 +18,8 @@ export default function ExportPanel({ contract, filename = 'beatsync_export' }) 
     setIsExporting(true)
     try {
       const csv = generateCsv(
-        contract.beats,
-        contract.bars || [],
+        contract.rhythm?.beats || [],
+        contract.rhythm?.bars || [],
         selectedFps
       )
       downloadCsv(csv, `${filename}.csv`)
@@ -32,7 +32,7 @@ export default function ExportPanel({ contract, filename = 'beatsync_export' }) 
     setIsExporting(true)
     try {
       const edl = generateEdl(
-        contract.beats,
+        contract.rhythm?.beats || [],
         selectedFps,
         filename
       )

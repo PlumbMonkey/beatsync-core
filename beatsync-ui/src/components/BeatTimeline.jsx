@@ -42,7 +42,7 @@ export default function BeatTimeline({ contract, onPlayheadChange }) {
   }
 
   const canvasWidth = getCanvasWidth()
-  const duration = contract.duration_seconds
+  const duration = contract.duration_sec
   const pixelsPerSecond = canvasWidth / (duration * scale)
 
   // Handle click on timeline
@@ -138,8 +138,9 @@ export default function BeatTimeline({ contract, onPlayheadChange }) {
     }
 
     // Draw Energy Curve (area chart)
-    if (contract.energy && contract.energy.length > 0) {
-      const energyData = contract.energy
+    const energyCurve = contract.energy && contract.energy.curve
+    if (energyCurve && energyCurve.length > 0) {
+      const energyData = energyCurve
 
       // Normalize energy values
       const maxEnergy = Math.max(...energyData)
@@ -179,7 +180,7 @@ export default function BeatTimeline({ contract, onPlayheadChange }) {
     ctx.strokeStyle = '#f6e05e'
     ctx.lineWidth = 2
 
-    contract.beats.forEach((beatTime) => {
+    ;(contract.rhythm?.beats || []).forEach((beatTime) => {
       const x = (beatTime / duration) * canvasWidth
       const tickHeight = 8
 
@@ -193,7 +194,7 @@ export default function BeatTimeline({ contract, onPlayheadChange }) {
     ctx.strokeStyle = '#fc8181'
     ctx.lineWidth = 3
 
-    contract.bars?.forEach((barTime) => {
+    ;(contract.rhythm?.bars || []).forEach((barTime) => {
       const x = (barTime / duration) * canvasWidth
       const tickHeight = 16
 
