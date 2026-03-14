@@ -1,0 +1,6 @@
+# This .gitignore ensures no build/test artifacts or dependencies are tracked
+node_modules/
+test-results/
+.env
+dist/
+build/

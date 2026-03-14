@@ -1,0 +1,9 @@
+pyproject.toml
+beatsync_studio/__init__.py
+beatsync_studio/main.py
+beatsync_studio.egg-info/PKG-INFO
+beatsync_studio.egg-info/SOURCES.txt
+beatsync_studio.egg-info/dependency_links.txt
+beatsync_studio.egg-info/requires.txt
+beatsync_studio.egg-info/top_level.txt
+tests/test_api_analysis.py

@@ -1,0 +1,8 @@
+/* styles.css — can be empty for Slice 4.2 */
+#timeline-container {
+  width: 820px;
+  overflow-x: auto;
+}
+#timeline {
+  width: 800px;
+}

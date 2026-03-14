@@ -7,6 +7,7 @@ src/beatsync_core.egg-info/PKG-INFO
 src/beatsync_core.egg-info/SOURCES.txt
 src/beatsync_core.egg-info/dependency_links.txt
 src/beatsync_core.egg-info/entry_points.txt
+src/beatsync_core.egg-info/requires.txt
 src/beatsync_core.egg-info/top_level.txt
 src/beatsync_core/core/__init__.py
 src/beatsync_core/core/audio.py
@@ -18,7 +19,10 @@ src/beatsync_core/core/tempo.py
 src/beatsync_core/utils/__init__.py
 src/beatsync_core/utils/io.py
 src/beatsync_core/utils/validate.py
+tests/test_cli_smoke.py
 tests/test_contract_schema.py
 tests/test_determinism.py
 tests/test_failures.py
 tests/test_golden_regression.py
+tests/test_key.py
+tests/test_structure.py

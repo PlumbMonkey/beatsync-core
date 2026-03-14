@@ -11,9 +11,12 @@ License:                                  Apache License
         
         ... (full Apache-2.0 license text should be inserted here) ...
         
-Requires-Python: >=3.8
+Requires-Python: >=3.10
 Description-Content-Type: text/markdown
 License-File: LICENSE
+Requires-Dist: mido>=1.3.0
+Requires-Dist: numpy>=1.26.0
+Requires-Dist: jsonschema>=4.21.0
 Dynamic: license-file
 
 # BeatSync MIDI

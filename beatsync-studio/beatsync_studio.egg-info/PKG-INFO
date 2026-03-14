@@ -1,0 +1,17 @@
+Metadata-Version: 2.4
+Name: beatsync_studio
+Version: 0.1.0
+Summary: BeatSync Studio: Web UI and orchestration for audio analysis.
+Author: Plumbmonkey Media
+Requires-Python: >=3.10
+Description-Content-Type: text/markdown
+Requires-Dist: fastapi>=0.109.0
+Requires-Dist: uvicorn>=0.27.0
+Requires-Dist: python-multipart>=0.0.9
+Requires-Dist: jsonschema>=4.21.0
+Requires-Dist: beatsync_core>=0.1.0
+Provides-Extra: dev
+Requires-Dist: pytest>=7.0.0; extra == "dev"
+Requires-Dist: pytest-cov>=4.0.0; extra == "dev"
+Requires-Dist: httpx>=0.26.0; extra == "dev"
+Requires-Dist: pytest-playwright>=0.4.3; extra == "dev"
